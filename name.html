@@ -40,6 +40,22 @@
 
     </div>
 
+    
+    <script>
+        function greetUser(){
+        const name = document.getElementById("nameInput").value;
+        const alertBox = document.getElementById("greetingAlert");
+        
+        if (name.trim() !== ""){
+        alertBox.innerText = `Hello ${name}! Welcome!` ;
+        alertBox.classList.remove("d-none");
+        }else{
+            alertBox.innerText="Please enter your name";
+            alertBox.classList.remove("d-none");
+            alertBox.classList.replace("alert-info", "alert-warning");
+        }
+    }
+    </script>
 
 
 
