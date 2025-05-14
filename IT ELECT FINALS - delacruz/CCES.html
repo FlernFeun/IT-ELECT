@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>College Course Enrollment System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+    }
+    body.login-background {
+      background-image: url('487473599_1089988519808324_6214532979231085591_n.jpg');
+      background-size: cover;
+      background-position: center;
+      font-family: Arial, sans-serif;
+    }
+    body:not(.login-background) {
+      background-image: none;
+    }
+    .auth-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      margin: 150px auto;
+    }
+    .logo-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo-header img {
+      max-height: 60px;
+      margin-bottom: 10px;
+    }
+    .btn-maroon {
+      background-color: #6f1d1b;
+      color: white;
+    }
+    .btn-maroon:hover {
+      background-color: #581313;
+    }
+    .dashboard-logo {
+      height: 80px; 
+      width: auto;
+    }
+    .dashboard {
+    background-image: url('487473599_1089988519808324_6214532979231085591_n.jpg');
+    background-size: contain;
+    background-position: center;
+    min-height: 100vh;
+    padding: 40px;   
+    }
+    .card {
+      background-color: #faeee0;
+      border: none;
+    }
+    footer {
+      background-color: #4b2e2e;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-bottom: 0%;
+    }
+
+  </style>
+</head>
+<body class="login-background">
+  <div id="auth-section">
+    <div class="auth-container">
+      <div class="logo-header">
+        <img src="images-removebg-preview.png" alt="Logo">
+        <h4>Colegio de Sta. Teresa de Avila</h4>
+      </div>
+      <div id="login-form">
+        <h5 class="mb-3 text-center">Login</h5>
+        <form onsubmit="return loginUser(event)">
+          <input type="email" id="loginEmail" class="form-control mb-3" placeholder="Email" required />
+          <input type="password" id="loginPassword" class="form-control mb-3" placeholder="Password" required />
+          <button class="btn btn-maroon w-100">Login</button>
+        </form>
+        <div class="text-center mt-3">
+          <small>Don't have an account? <a href="#" onclick="toggleForms('signup')">Sign Up</a></small>
+        </div>
+        <div class="text-center mt-3">
+          <small><a href="#" onclick="forgotPassword()">Forgot Password?</a></small>
+        </div>
+      </div>
+      <div id="signup-form" class="d-none">
+        <h5 class="mb-3 text-center">Sign Up</h5>
+        <form onsubmit="return signupUser(event)">
+          <input type="text" id="signupName" class="form-control mb-3" placeholder="Full Name" required />
+          <input type="email" id="signupEmail" class="form-control mb-3" placeholder="Email" required />
+          <input type="password" id="signupPassword" class="form-control mb-3" placeholder="Password" required />
+          <button class="btn btn-maroon w-100">Sign Up</button>
+        </form>
+        <div class="text-center mt-3">
+          <small>Already have an account? <a href="#" onclick="toggleForms('login')">Login</a></small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboard" class="d-none">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #4b2e2e;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="LOGO3.png" class="me-2 dashboard-logo">Colegio de Sta. Teresa de Avila
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Courses</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="#">About</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                <img src="default-profile.png" alt="Profile" width="32" height="32" class="rounded-circle me-2">
+                <span id="profileName">Profile</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#" onclick="openEditProfile()">Edit Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Logout</a></li>
+              </ul>
+            </li>
+          </ul>          
+          <form class="d-flex" onsubmit="return searchCourses(event)">
+            <input id="searchInput" class="form-control me-2" type="search" placeholder="Search courses" aria-label="Search">
+            <button class="btn btn-outline-light" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+
+    <div class="dashboard">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 style="color: white;">Welcome, <span id="userName"></span></h3>
+        <button class="btn btn-maroon" onclick="logout()">Logout</button>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <h3 style="color: white;">Available Courses</h5>
+          <div class="row" id="courseList"></div>
+        </div>
+      </div>
+      <h3 class="mt-4" style="color:white;">Your Enrollments</h5>
+      <ul id="enrolledCourses" class="list-group"></ul>
+    </div>
+  </div>
+
+  <footer>
+    Designed by: Lizett Ann Dela Cruz | 2025
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!sessionStorage.getItem('currentUser')) {
+        document.body.classList.add('login-background');
+      } else {
+        document.body.classList.remove('login-background');
+      }
+    });
+
+    function forgotPassword() {
+      const email = prompt('Enter your email to reset your password:');
+      if (email) {
+        alert(`A password reset link has been sent to ${email}`);
+      }
+    }
+
+    const courses = [
+      { id: 1, name: 'Bachelor of Science in Information Technology (BSIT)' },
+      { id: 2, name: 'Bachelor of Science in Hospitality Management (BSHM)' },
+      { id: 3, name: 'Bachelor of Science in Tourism Management (BSTM)' },
+      { id: 4, name: 'Bachelor of Secondary Education (BSED - English)' },
+      { id: 5, name: 'Bachelor of Secondary Education (BSED - Filipino)' },
+      { id: 6, name: 'Bachelor of Secondary Education (BSED - Mathematics)' },
+      { id: 7, name: 'Bachelor of Secondary Education (BSED - Social Science)' },
+      { id: 8, name: 'Bachelor of Elementary Education (BEED - General Education)' }
+    ];
+
+    function toggleForms(form) {
+      document.getElementById('login-form').classList.toggle('d-none', form !== 'login');
+      document.getElementById('signup-form').classList.toggle('d-none', form !== 'signup');
+    }
+
+    function signupUser(event) {
+      event.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      localStorage.setItem(email, JSON.stringify({ name, password, enrollments: [] }));
+      alert('Account created! Please log in.');
+      toggleForms('login');
+    }
+
+    function loginUser(event) {
+      event.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const user = JSON.parse(localStorage.getItem(email));
+      if (user && user.password === password) {
+        sessionStorage.setItem('currentUser', email);
+        document.body.classList.remove('login-background');
+        loadDashboard(user);
+      } else {
+        alert('Invalid login credentials.');
+      }
+    }
+
+    function openEditProfile() {
+    const email = sessionStorage.getItem('currentUser');
+    const user = JSON.parse(localStorage.getItem(email));
+
+    const modalHtml = `
+      <div class="modal fade" id="editProfileModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content p-3">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Profile</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <form onsubmit="saveProfileChanges(event)">
+                <input type="text" class="form-control my-2" id="editName" placeholder="Name" value="${user.name}" required>
+                <input type="email" class="form-control my-2" id="editEmail" placeholder="Email" value="${email}" required disabled>
+                <input type="password" class="form-control my-2" id="editPassword" placeholder="New Password (leave blank to keep old)">
+                <button type="submit" class="btn btn-maroon w-100 mt-2">Save Changes</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = modalHtml;
+    document.body.appendChild(tempDiv);
+    const modal = new bootstrap.Modal(tempDiv.querySelector('#editProfileModal'));
+    modal.show();
+    tempDiv.querySelector('#editProfileModal').addEventListener('hidden.bs.modal', () => tempDiv.remove());
+  }
+
+  function saveProfileChanges(event) {
+    event.preventDefault();
+    const newName = document.getElementById('editName').value;
+    const newPassword = document.getElementById('editPassword').value;
+    const email = sessionStorage.getItem('currentUser');
+    const user = JSON.parse(localStorage.getItem(email));
+    
+    user.name = newName;
+    if (newPassword.trim() !== '') {
+      user.password = newPassword;
+    }
+
+    localStorage.setItem(email, JSON.stringify(user));
+    document.getElementById('userName').innerText = newName;
+    document.getElementById('profileName').innerText = newName;
+    
+    alert('Profile updated successfully.');
+    bootstrap.Modal.getInstance(document.getElementById('editProfileModal')).hide();
+  }
+
+  // Update profile name on dashboard load
+  document.addEventListener("DOMContentLoaded", () => {
+    const email = sessionStorage.getItem('currentUser');
+    if (email) {
+      const user = JSON.parse(localStorage.getItem(email));
+      document.getElementById('profileName').innerText = user?.name || "Profile";
+    }
+  });
+
+    function loadDashboard(user) {
+      document.getElementById('auth-section').classList.add('d-none');
+      document.getElementById('dashboard').classList.remove('d-none');
+      document.getElementById('userName').innerText = user.name;
+      renderCourseList(courses);
+      renderEnrolledCourses(user.enrollments);
+    }
+
+    function renderCourseList(courseArray) {
+      const courseList = document.getElementById('courseList');
+      courseList.innerHTML = '';
+      courseArray.forEach(course => {
+        const div = document.createElement('div');
+        div.classList.add('col-md-6');
+        div.innerHTML = `
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5>${course.name}</h5>
+              <button class="btn btn-maroon btn-sm" onclick="enrollCourse('${course.name}')">Enroll</button>
+            </div>
+          </div>`;
+        courseList.appendChild(div);
+      });
+    }
+
+    function searchCourses(event) {
+      event.preventDefault();
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filteredCourses = courses.filter(course =>
+        course.name.toLowerCase().includes(query)
+      );
+      renderCourseList(filteredCourses);
+    }
+
+    function enrollCourse(courseName) {
+      const formHtml = `
+        <form onsubmit="submitEnrollment(event, '${courseName}')">
+          <input class='form-control my-1' type='text' name='surname' placeholder='Surname' required>
+          <input class='form-control my-1' type='text' name='firstname' placeholder='First Name' required>
+          <input class='form-control my-1' type='text' name='middle' placeholder='Middle Initial/Name'>
+          <input class='form-control my-1' type='number' name='age' placeholder='Age' required>
+          <input class='form-control my-1' type='text' name='address' placeholder='Address' required>
+          <input class='form-control my-1' type='date' name='birthday' required>
+          <select class='form-control my-1' name='sex' required>
+            <option value=''>Sex</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+          <input class='form-control my-1' type='text' name='cellphone' placeholder='Cellphone Number' required>
+          <input class='form-control my-1' type='text' name='studentNumber' placeholder='Student Number (if old)'>
+
+          <select class='form-control my-1' name='semester' required>
+            <option value=''>Select Semester</option>
+            <option>1st Semester</option>
+            <option>2nd Semester</option>
+          </select>
+
+          <select class='form-control my-1' name='yearLevel' required>
+            <option value=''>Select Year Level</option>
+            <option>1st Year</option>
+            <option>2nd Year</option>
+            <option>3rd Year</option>
+            <option>4th Year</option>
+          </select>
+
+          <button type='submit' class='btn btn-maroon mt-2'>Submit Enrollment</button>
+        </form>`;
+
+      const modal = document.createElement('div');
+      modal.className = 'modal fade';
+      modal.id = 'enrollModal';
+      modal.tabIndex = -1;
+      modal.innerHTML = `
+        <div class='modal-dialog modal-dialog-centered'>
+          <div class='modal-content p-3'>
+            <div class='modal-header'>
+              <h5 class='modal-title'>Enrollment Form</h5>
+              <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+            </div>
+            <div class='modal-body'>${formHtml}</div>
+          </div>
+        </div>`;
+
+      document.body.appendChild(modal);
+      const bsModal = new bootstrap.Modal(modal);
+      bsModal.show();
+      modal.addEventListener('hidden.bs.modal', () => modal.remove());
+    }
+
+    function submitEnrollment(event, courseName) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const details = {};
+      for (let [key, value] of formData.entries()) {
+        details[key] = value;
+      }
+
+      const email = sessionStorage.getItem('currentUser');
+      const user = JSON.parse(localStorage.getItem(email));
+
+      if (!user.enrollments.some(e => e.course === courseName)) {
+        user.enrollments.push({ course: courseName, info: details });
+        localStorage.setItem(email, JSON.stringify(user));
+        renderEnrolledCourses(user.enrollments);
+        bootstrap.Modal.getInstance(document.getElementById('enrollModal')).hide();
+      } else {
+        alert("Already enrolled in this course.");
+      }
+    }
+
+    function renderEnrolledCourses(enrollments) {
+      const list = document.getElementById('enrolledCourses');
+      list.innerHTML = '';
+      enrollments.forEach((enrollment, index) => {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+        li.innerHTML = `
+          <span><strong>${enrollment.course}</strong> - ${enrollment.info.firstname} ${enrollment.info.surname} (${enrollment.info.yearLevel}, ${enrollment.info.semester})</span>
+          <button class="btn btn-info btn-sm" onclick="viewEnrollment(${index})">View</button>
+          <button class="btn btn-danger btn-sm" onclick="removeEnrollment(${index})">Remove</button>`;
+        list.appendChild(li); 
+      });
+    }
+
+    function viewEnrollment(index) {
+      const email = sessionStorage.getItem('currentUser');
+      const user = JSON.parse(localStorage.getItem(email));
+      const enrollment = user.enrollments[index];
+      const formHtml = `
+        <form onsubmit="submitEditEnrollment(event, ${index})">
+          <input class='form-control my-1' type='text' name='surname' value='${enrollment.info.surname}' required>
+          <input class='form-control my-1' type='text' name='firstname' value='${enrollment.info.firstname}' required>
+          <input class='form-control my-1' type='text' name='middle' value='${enrollment.info.middle}' placeholder='Middle Initial/Name'>
+          <input class='form-control my-1' type='number' name='age' value='${enrollment.info.age}' required>
+          <input class='form-control my-1' type='text' name='address' value='${enrollment.info.address}' required>
+          <input class='form-control my-1' type='date' name='birthday' value='${enrollment.info.birthday}' required>
+          <select class='form-control my-1' name='sex' required>
+            <option value='${enrollment.info.sex}'>${enrollment.info.sex}</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+          <input class='form-control my-1' type='text' name='cellphone' value='${enrollment.info.cellphone}' required>
+          <input class='form-control my-1' type='text' name='studentNumber' value='${enrollment.info.studentNumber}' placeholder='Student Number (if old)'>
+
+          <select class='form-control my-1' name='semester' required>
+            <option value='${enrollment.info.semester}'>${enrollment.info.semester}</option>
+            <option>1st Semester</option>
+            <option>2nd Semester</option>
+          </select>
+
+          <select class='form-control my-1' name='yearLevel' required>
+            <option value='${enrollment.info.yearLevel}'>${enrollment.info.yearLevel}</option>
+            <option>1st Year</option>
+            <option>2nd Year</option>
+            <option>3rd Year</option>
+            <option>4th Year</option>
+          </select>
+
+          <button type='submit' class='btn btn-maroon mt-2'>Save Changes</button>
+        </form>`;
+
+      const modal = document.createElement('div');
+      modal.className = 'modal fade';
+      modal.id = 'editModal';
+      modal.tabIndex = -1;
+      modal.innerHTML = `
+        <div class='modal-dialog modal-dialog-centered'>
+          <div class='modal-content p-3'>
+            <div class='modal-header'>
+              <h5 class='modal-title'>Edit Enrollment</h5>
+              <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+            </div>
+            <div class='modal-body'>${formHtml}</div>
+          </div>
+        </div>`;
+
+      document.body.appendChild(modal);
+      const bsModal = new bootstrap.Modal(modal);
+      bsModal.show();
+      modal.addEventListener('hidden.bs.modal', () => modal.remove());
+    }
+
+    function submitEditEnrollment(event, index) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const details = {};
+      for (let [key, value] of formData.entries()) {
+        details[key] = value;
+      }
+
+      const email = sessionStorage.getItem('currentUser');
+      const user = JSON.parse(localStorage.getItem(email));
+      user.enrollments[index].info = details;
+      localStorage.setItem(email, JSON.stringify(user));
+      renderEnrolledCourses(user.enrollments);
+      bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+    }
+
+    function removeEnrollment(index) {
+      const email = sessionStorage.getItem('currentUser');
+      const user = JSON.parse(localStorage.getItem(email));
+      user.enrollments.splice(index, 1);
+      localStorage.setItem(email, JSON.stringify(user));
+      renderEnrolledCourses(user.enrollments);
+    }
+
+    function logout() {
+      sessionStorage.removeItem('currentUser');
+      document.body.classList.add('login-background');
+      document.getElementById('auth-section').classList.remove('d-none');
+      document.getElementById('dashboard').classList.add('d-none');
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
